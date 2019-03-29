@@ -22,10 +22,10 @@ pipeline {
           }
           withCredentials([string(credentialsId: 'CHEF_DECRYPTION_KEY', variable: 'decrypt_key')]) {
             sh '''
-              openssl aes-256-cbc -d -a -in jenkins-pipeline/dfs_knife_qa.rb.enc -out dfs_knife_qa.rb -k $decrypt_key
+              openssl aes-256-cbc -d -a -in jenkins-pipeline/knife_qa.rb.enc -out knife_qa.rb -k $decrypt_key
               openssl aes-256-cbc -d -a -in jenkins-pipeline/vrachefprod.pem.enc -out vrachefprod.pem -k $decrypt_key
-              openssl aes-256-cbc -d -a -in jenkins-pipeline/dfs_knife.rb.enc -out dfs_knife.rb -k $decrypt_key
-              openssl aes-256-cbc -d -a -in jenkins-pipeline/vrachefqa.pem.enc -out grommel.pem -k $decrypt_key
+              openssl aes-256-cbc -d -a -in jenkins-pipeline/knife.rb.enc -out knife.rb -k $decrypt_key
+              openssl aes-256-cbc -d -a -in jenkins-pipeline/vrachefqa.pem.enc -out vrachefqa.pem -k $decrypt_key
             '''
           }
         }
@@ -42,11 +42,11 @@ pipeline {
 
           LAST_MONTH = sh(script: "date '+%B' --date='-1 month'", returnStdout: true)
           YEAR = sh(script: "date '+%Y'", returnStdout: true)
-          PROD_CBOOK_NUM = sh(script: 'knife cookbook list -c dfs_knife.rb|wc -l', returnStdout: true)
-          PROD_NODE_NUM = sh(script: 'knife node list -c dfs_knife.rb|wc -l', returnStdout: true)
-          QA_CBOOK_NUM = sh(script: 'knife cookbook list -c dfs_knife_qa.rb|wc -l', returnStdout: true)
-          QA_NODE_NUM = sh(script: 'knife node list -c dfs_knife_qa.rb|wc -l', returnStdout: true)
-          SPRMRT_NUM = sh(script: 'knife cookbook site list -m https://supermarket.chef.io -w -c dfs_knife.rb| wc -l', returnStdout: true)
+          PROD_CBOOK_NUM = sh(script: 'knife cookbook list -c knife.rb|wc -l', returnStdout: true)
+          PROD_NODE_NUM = sh(script: 'knife node list -c knife.rb|wc -l', returnStdout: true)
+          QA_CBOOK_NUM = sh(script: 'knife cookbook list -c knife_qa.rb|wc -l', returnStdout: true)
+          QA_NODE_NUM = sh(script: 'knife node list -c knife_qa.rb|wc -l', returnStdout: true)
+          SPRMRT_NUM = sh(script: 'knife cookbook site list -m https://supermarket.chef.io -w -c knife.rb| wc -l', returnStdout: true)
           COMP_NUM = sh(script: 'cat profile_ct.txt | wc -l',returnStdout: true)
         }
       }
